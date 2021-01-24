@@ -50,14 +50,14 @@ public class ColorPickerManager
 		this.configManager = configManager;
 	}
 
-	public RuneliteColorPicker create(Window owner, Color previousColor, String title, boolean alphaHidden)
+	public RuneliteColorPicker create(Window owner, Color previousColor, String title, boolean alphaHidden, boolean unsettable)
 	{
 		if (currentPicker != null)
 		{
 			currentPicker.dispatchEvent(new WindowEvent(currentPicker, WindowEvent.WINDOW_CLOSING));
 		}
 
-		currentPicker = new RuneliteColorPicker(owner, previousColor, title, alphaHidden, configManager, this);
+		currentPicker = new RuneliteColorPicker(owner, previousColor, title, alphaHidden, unsettable, configManager, this);
 		return currentPicker;
 	}
 }

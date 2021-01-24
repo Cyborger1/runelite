@@ -413,6 +413,7 @@ class ConfigPanel extends PluginPanel
 				ColorJButton colorPickerBtn;
 
 				boolean alphaHidden = cid.getAlpha() == null;
+				boolean unsettable = cid.getUnsettableColor() != null;
 
 				if (existing == null)
 				{
@@ -434,14 +435,23 @@ class ConfigPanel extends PluginPanel
 							SwingUtilities.windowForComponent(ConfigPanel.this),
 							colorPickerBtn.getColor(),
 							cid.getItem().name(),
-							alphaHidden);
+							alphaHidden,
+							unsettable);
 						colorPicker.setLocation(getLocationOnScreen());
 						colorPicker.setOnColorChange(c ->
 						{
 							colorPickerBtn.setColor(c);
 							colorPickerBtn.setText("#" + (alphaHidden ? ColorUtil.colorToHexCode(c) : ColorUtil.colorToAlphaHexCode(c)).toUpperCase());
 						});
-						colorPicker.setOnClose(c -> changeConfiguration(colorPicker, cd, cid));
+						colorPicker.setOnClose(c ->
+						{
+							if (colorPicker.isRequestedUnset())
+							{
+								colorPickerBtn.setText("Pick a color");
+								colorPickerBtn.setColor(Color.BLACK);
+							}
+							changeConfiguration(colorPicker, cd, cid);
+						});
 						colorPicker.setVisible(true);
 					}
 				});
@@ -616,7 +626,14 @@ class ConfigPanel extends PluginPanel
 		else if (component instanceof RuneliteColorPicker)
 		{
 			RuneliteColorPicker colorPicker = (RuneliteColorPicker) component;
-			configManager.setConfiguration(cd.getGroup().value(), cid.getItem().keyName(), colorPicker.getSelectedColor().getRGB() + "");
+			if (colorPicker.isRequestedUnset())
+			{
+				configManager.unsetConfiguration(cd.getGroup().value(), cid.getItem().keyName());
+			}
+			else
+			{
+				configManager.setConfiguration(cd.getGroup().value(), cid.getItem().keyName(), colorPicker.getSelectedColor() + "");
+			}
 		}
 		else if (component instanceof JComboBox)
 		{

@@ -547,7 +547,7 @@ class ScreenMarkerPanel extends JPanel
 			SwingUtilities.windowForComponent(this),
 			marker.getMarker().getFill(),
 			marker.getMarker().getName() + " Fill",
-			false);
+			false, false);
 		colorPicker.setLocation(getLocationOnScreen());
 		colorPicker.setOnColorChange(c ->
 		{
@@ -564,7 +564,7 @@ class ScreenMarkerPanel extends JPanel
 			SwingUtilities.windowForComponent(this),
 			marker.getMarker().getColor(),
 			marker.getMarker().getName() + " Border",
-			false);
+			false, false);
 		colorPicker.setLocation(getLocationOnScreen());
 		colorPicker.setOnColorChange(c ->
 		{

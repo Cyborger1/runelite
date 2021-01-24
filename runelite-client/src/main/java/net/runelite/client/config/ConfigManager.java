@@ -664,6 +664,7 @@ public class ConfigManager
 				m.getReturnType(),
 				m.getDeclaredAnnotation(Range.class),
 				m.getDeclaredAnnotation(Alpha.class),
+				m.getDeclaredAnnotation(UnsettableColor.class),
 				m.getDeclaredAnnotation(Units.class)
 			))
 			.sorted((a, b) -> ComparisonChain.start()

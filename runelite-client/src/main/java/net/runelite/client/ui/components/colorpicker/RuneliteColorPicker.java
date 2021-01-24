@@ -43,6 +43,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Objects;
 import java.util.function.Consumer;
+import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -83,9 +84,13 @@ public class RuneliteColorPicker extends JDialog
 	private final JTextField hexInput = new JTextField();
 
 	private final boolean alphaHidden;
+	private final boolean unsettable;
 
 	@Getter
 	private Color selectedColor;
+
+	@Getter
+	private boolean requestedUnset = false;
 
 	@Setter
 	private Consumer<Color> onColorChange;
@@ -93,13 +98,14 @@ public class RuneliteColorPicker extends JDialog
 	@Setter
 	private Consumer<Color> onClose;
 
-	RuneliteColorPicker(Window parent, Color previousColor, String title, boolean alphaHidden,
-		final ConfigManager configManager, final ColorPickerManager colorPickerManager)
+	RuneliteColorPicker(Window parent, Color previousColor, String title, boolean alphaHidden, boolean unsettable,
+						final ConfigManager configManager, final ColorPickerManager colorPickerManager)
 	{
 		super(parent, "RuneLite Color Picker - " + title, ModalityType.MODELESS);
 
 		this.selectedColor = previousColor;
 		this.alphaHidden = alphaHidden;
+		this.unsettable = unsettable;
 
 		RecentColors recentColors = new RecentColors(configManager);
 
@@ -151,6 +157,22 @@ public class RuneliteColorPicker extends JDialog
 		cx.fill = GridBagConstraints.HORIZONTAL;
 		cx.gridwidth = GridBagConstraints.REMAINDER;
 		hexContainer.add(hexInput, cx);
+
+		if (unsettable)
+		{
+			JButton unsetButton = new JButton("Unset Color");
+			unsetButton.addActionListener(event ->
+			{
+				requestedUnset = true;
+				this.setVisible(false);
+				this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+			});
+
+			Insets prev = cx.insets;
+			cx.insets = new Insets(1, 1, 0, 1);
+			hexContainer.add(unsetButton, cx);
+			cx.insets = prev;
+		}
 
 		cx.fill = GridBagConstraints.BOTH;
 		cx.weightx = 1;
