@@ -628,11 +628,11 @@ class ConfigPanel extends PluginPanel
 			RuneliteColorPicker colorPicker = (RuneliteColorPicker) component;
 			if (colorPicker.isRequestedUnset())
 			{
-				configManager.unsetConfiguration(cd.getGroup().value(), cid.getItem().keyName());
+				configManager.setConfiguration(cd.getGroup().value(), cid.getItem().keyName(), null);
 			}
 			else
 			{
-				configManager.setConfiguration(cd.getGroup().value(), cid.getItem().keyName(), colorPicker.getSelectedColor() + "");
+				configManager.setConfiguration(cd.getGroup().value(), cid.getItem().keyName(), colorPicker.getSelectedColor().getRGB() + "");
 			}
 		}
 		else if (component instanceof JComboBox)
