@@ -142,14 +142,16 @@ public class XpGlobesOverlay extends Overlay
 		return ((xpGained / xpGoal) * 100);
 	}
 
-	private double getSkillProgressRadius(int startXp, int currentXp, int goalXp)
+	private double getSkillProgressRadius(int startXp, int currentXp, int goalXp, boolean clockwise)
 	{
-		return -(3.6 * getSkillProgress(startXp, currentXp, goalXp)); //arc goes backwards
+		double radius = 3.6 * getSkillProgress(startXp, currentXp, goalXp);
+		return clockwise ? -radius : radius; //clockwise goes backwards
 	}
 
 	private void renderProgressCircle(Graphics2D graphics, XpGlobe skillToDraw, int startXp, int goalXp, int x, int y, Rectangle bounds)
 	{
-		double radiusCurrentXp = getSkillProgressRadius(startXp, skillToDraw.getCurrentXp(), goalXp);
+		double radiusCurrentXp = getSkillProgressRadius(startXp, skillToDraw.getCurrentXp(), goalXp,
+			config.progressArcOrientation() == ArcOrientation.CLOCKWISE);
 		double radiusToGoalXp = 360; //draw a circle
 
 		Ellipse2D backgroundCircle = drawEllipse(graphics, x, y);
@@ -189,7 +191,8 @@ public class XpGlobesOverlay extends Overlay
 			graphics,
 			x, y,
 			config.xpOrbSize(), config.xpOrbSize(),
-			PROGRESS_RADIUS_START, radiusCurrentXp,
+			PROGRESS_RADIUS_START - config.progressArcStartingAngle(),
+			radiusCurrentXp,
 			config.progressArcStrokeWidth(),
 			config.enableCustomArcColor() ? config.progressArcColor() : SkillColor.find(skillToDraw.getSkill()).getColor());
 	}

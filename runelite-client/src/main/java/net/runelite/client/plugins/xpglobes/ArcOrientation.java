@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Hydrox6 <ikada@protonmail.ch>
+ * Copyright (c) 2021, Cyborger1
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -22,29 +22,23 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.runelite.client.config;
+package net.runelite.client.plugins.xpglobes;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-/**
- * Used with ConfigItem, defines what units are shown to the side of the box.
- */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-@Documented
-public @interface Units
+@Getter
+@AllArgsConstructor
+public enum ArcOrientation
 {
-	String MILLISECONDS = "ms";
-	String MINUTES = " mins";
-	String PERCENT = "%";
-	String PIXELS = "px";
-	String SECONDS = "s";
-	String TICKS = " ticks";
-	String DEGREES = "°";
+	CLOCKWISE("Clockwise"),
+	COUNTER_CLOCKWISE("Counter");
 
-	String value();
+	private String name;
+
+	@Override
+	public String toString()
+	{
+		return getName();
+	}
 }

@@ -29,6 +29,7 @@ import net.runelite.client.config.Alpha;
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
+import net.runelite.client.config.Range;
 import net.runelite.client.config.Units;
 
 @ConfigGroup("xpglobes")
@@ -160,10 +161,34 @@ public interface XpGlobesConfig extends Config
 	}
 
 	@ConfigItem(
+		keyName = "Progress arc starting angle",
+		name = "Progress arc starting angle",
+		description = "Change the progress arc's starting angle, with 0° being straight up",
+		position = 11
+	)
+	@Units(Units.DEGREES)
+	@Range(min = -180, max = 180)
+	default int progressArcStartingAngle()
+	{
+		return 0;
+	}
+
+	@ConfigItem(
+		keyName = "Progress arc orientation",
+		name = "Progress arc orientation",
+		description = "Change the progress arc's filling orientation",
+		position = 12
+	)
+	default ArcOrientation progressArcOrientation()
+	{
+		return ArcOrientation.CLOCKWISE;
+	}
+
+	@ConfigItem(
 		keyName = "Orb size",
 		name = "Size of orbs",
 		description = "Change the size of the xp orbs",
-		position = 11
+		position = 13
 	)
 	@Units(Units.PIXELS)
 	default int xpOrbSize()
@@ -175,7 +200,7 @@ public interface XpGlobesConfig extends Config
 		keyName = "Orb duration",
 		name = "Duration of orbs",
 		description = "Change the duration the xp orbs are visible",
-		position = 12
+		position = 14
 	)
 	@Units(Units.SECONDS)
 	default int xpOrbDuration()
