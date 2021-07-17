@@ -41,9 +41,12 @@ import java.awt.LayoutManager;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.TrayIcon;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.time.Duration;
 import javax.annotation.Nullable;
@@ -176,7 +179,15 @@ public class ClientUI
 			return;
 		}
 
-		SwingUtilities.invokeLater(() -> updateFrameConfig(event.getKey().equals("lockWindowSize")));
+		SwingUtilities.invokeLater(() ->
+		{
+			updateFrameConfig(event.getKey().equals("lockWindowSize"));
+
+			if (withTitleBar)
+			{
+				setFrameShape();
+			}
+		});
 	}
 
 	@Subscribe
@@ -424,6 +435,15 @@ public class ClientUI
 
 			if (withTitleBar)
 			{
+				frame.addComponentListener(new ComponentAdapter()
+				{
+					@Override
+					public void componentResized(ComponentEvent e)
+					{
+						setFrameShape();
+					}
+				});
+
 				frame.getRootPane().setWindowDecorationStyle(JRootPane.FRAME);
 
 				final JComponent titleBar = SubstanceCoreUtilities.getTitlePaneComponent(frame);
@@ -1118,6 +1138,18 @@ public class ClientUI
 
 			configManager.unsetConfiguration(CONFIG_GROUP, CONFIG_CLIENT_MAXIMIZED);
 			configManager.setConfiguration(CONFIG_GROUP, CONFIG_CLIENT_BOUNDS, bounds);
+		}
+	}
+
+	private void setFrameShape()
+	{
+		if (config.enableCustomChromeRoundedCorners())
+		{
+			frame.setShape(new RoundRectangle2D.Double(0, 0, frame.getWidth(), frame.getHeight(), 14, 14));
+		}
+		else
+		{
+			frame.setShape(null);
 		}
 	}
 }

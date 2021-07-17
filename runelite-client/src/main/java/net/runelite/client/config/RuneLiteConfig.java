@@ -38,6 +38,7 @@ import net.runelite.client.util.OSType;
 public interface RuneLiteConfig extends Config
 {
 	String GROUP_NAME = "runelite";
+	String UI_ENABLE_ROUNDED_CORNERS_KEY_NAME = "uiEnableCustomChromeRoundedCorners";
 
 	@ConfigSection(
 		name = "Window Settings",
@@ -131,6 +132,18 @@ public interface RuneLiteConfig extends Config
 	default boolean enableCustomChrome()
 	{
 		return OSType.getOSType() == OSType.Windows;
+	}
+
+	@ConfigItem(
+		keyName = UI_ENABLE_ROUNDED_CORNERS_KEY_NAME,
+		name = "Custom chrome rounded corners",
+		description = "Round the window corners when using RuneLite's custom window title and borders.",
+		position = 15,
+		section = windowSettings
+	)
+	default boolean enableCustomChromeRoundedCorners()
+	{
+		return false;
 	}
 
 	@Range(
