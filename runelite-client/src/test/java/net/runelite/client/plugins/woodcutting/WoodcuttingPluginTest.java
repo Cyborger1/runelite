@@ -43,6 +43,8 @@ import net.runelite.api.events.ItemSpawned;
 import net.runelite.client.Notifier;
 import net.runelite.client.config.Notification;
 import net.runelite.client.game.ItemManager;
+import net.runelite.client.callback.ClientThread;
+import net.runelite.client.game.SkillIconManager;
 import net.runelite.client.plugins.woodcutting.config.ClueNestTier;
 import net.runelite.client.ui.overlay.OverlayManager;
 import net.runelite.client.ui.overlay.infobox.InfoBoxManager;
@@ -92,11 +94,19 @@ public class WoodcuttingPluginTest
 
 	@Mock
 	@Bind
+	ClientThread clientThread;
+
+	@Mock
+	@Bind
 	private InfoBoxManager infoBoxManager;
 
 	@Mock
 	@Bind
 	private ItemManager itemManager;
+
+	@Mock
+	@Bind
+	SkillIconManager skillIconManager;
 
 	@Before
 	public void before()
