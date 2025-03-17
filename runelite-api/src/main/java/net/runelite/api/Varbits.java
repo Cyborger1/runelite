@@ -999,4 +999,9 @@ public final class Varbits
 	public static final int JARVIS_GRAVESTONE = 6008;
 
 	public static final int IN_LMS = 5314;
+
+	/**
+	 * Woodcutting Group Bonus, value from 1 to 10 and valid if {@link VarPlayer#BUFF_BAR_WC_GROUP_BONUS} is set to 96
+	 */
+	public static final int WC_GROUP_BONUS = 15348;
 }

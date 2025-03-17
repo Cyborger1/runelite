@@ -76,6 +76,7 @@ import net.runelite.api.NullObjectID;
 import net.runelite.api.ObjectID;
 import net.runelite.api.ScriptID;
 import net.runelite.api.Tile;
+import net.runelite.api.VarPlayer;
 import net.runelite.api.Varbits;
 import net.runelite.api.coords.LocalPoint;
 import net.runelite.api.coords.WorldPoint;
@@ -124,6 +125,8 @@ public class WoodcuttingPlugin extends Plugin
 
 	private static final Pattern WOOD_CUT_PATTERN = Pattern.compile("You get (?:some|an)[\\w ]+(?:logs?|mushrooms)\\.");
 	private static final Pattern ANIMA_BARK_PATTERN = Pattern.compile("You've been awarded <col=[0-9a-f]+>(\\d+) Anima-infused bark</col>\\.");
+
+	private static final int BUFF_BAR_DISPLAYED = 96;
 
 	@Inject
 	private Notifier notifier;
@@ -189,6 +192,7 @@ public class WoodcuttingPlugin extends Plugin
 	private ClueNestTier clueTierSpawned;
 
 	private Counter leprechaunsLuckInfoBox;
+	private Counter groupBonusInfoBox;
 
 	void resetSession()
 	{
@@ -196,6 +200,9 @@ public class WoodcuttingPlugin extends Plugin
 
 		infoBoxManager.removeInfoBox(leprechaunsLuckInfoBox);
 		leprechaunsLuckInfoBox = null;
+
+		infoBoxManager.removeInfoBox(groupBonusInfoBox);
+		groupBonusInfoBox = null;
 	}
 
 	@Provides
@@ -226,6 +233,8 @@ public class WoodcuttingPlugin extends Plugin
 		clueTierSpawned = null;
 		infoBoxManager.removeInfoBox(leprechaunsLuckInfoBox);
 		leprechaunsLuckInfoBox = null;
+		infoBoxManager.removeInfoBox(groupBonusInfoBox);
+		groupBonusInfoBox = null;
 	}
 
 	@Subscribe
@@ -264,6 +273,9 @@ public class WoodcuttingPlugin extends Plugin
 
 			infoBoxManager.removeInfoBox(leprechaunsLuckInfoBox);
 			leprechaunsLuckInfoBox = null;
+
+			infoBoxManager.removeInfoBox(groupBonusInfoBox);
+			groupBonusInfoBox = null;
 		}
 	}
 
@@ -665,6 +677,12 @@ public class WoodcuttingPlugin extends Plugin
 		{
 			updateLeprechaunsLuck();
 		}
+
+		if (event.getVarbitId() == Varbits.WC_GROUP_BONUS
+			|| event.getVarpId() == VarPlayer.BUFF_BAR_WC_GROUP_BONUS)
+		{
+			updateWCGroupBonus();
+		}
 	}
 
 	private void updateLeprechaunsLuck()
@@ -691,6 +709,32 @@ public class WoodcuttingPlugin extends Plugin
 
 		leprechaunsLuckInfoBox.setCount(leprechaunsLuck);
 		leprechaunsLuckInfoBox.setTooltip("Leprechaun's Luck: " + leprechaunsLuck);
+	}
+
+	private void updateWCGroupBonus()
+	{
+		final int bonus = client.getVarbitValue(Varbits.WC_GROUP_BONUS);
+
+		// Don't show if buff bar is not marked as active
+		if (bonus < 1 || !config.showWCGroupBonus()
+			|| client.getVarpValue(VarPlayer.BUFF_BAR_WC_GROUP_BONUS) != BUFF_BAR_DISPLAYED)
+		{
+			if (groupBonusInfoBox != null)
+			{
+				infoBoxManager.removeInfoBox(groupBonusInfoBox);
+				groupBonusInfoBox = null;
+			}
+			return;
+		}
+
+		if (groupBonusInfoBox == null)
+		{
+			groupBonusInfoBox = new Counter(itemManager.getImage(ItemID.CRYSTAL_FELLING_AXE), this, bonus);
+			infoBoxManager.addInfoBox(groupBonusInfoBox);
+		}
+
+		groupBonusInfoBox.setCount(bonus);
+		groupBonusInfoBox.setTooltip("Woodcutting Group Bonus: +" + bonus);
 	}
 
 	@Subscribe

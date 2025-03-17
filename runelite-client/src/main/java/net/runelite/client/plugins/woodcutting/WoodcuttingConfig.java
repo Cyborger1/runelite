@@ -324,4 +324,16 @@ public interface WoodcuttingConfig extends Config
 	{
 		return true;
 	}
+
+	@ConfigItem(
+		position = 28,
+		keyName = "showWCGroupBonus",
+		name = "Show group bonus",
+		description = "Shows an infobox with the woodcutting group bonus for the current tree.",
+		section = forestrySection
+	)
+	default boolean showWCGroupBonus()
+	{
+		return true;
+	}
 }
